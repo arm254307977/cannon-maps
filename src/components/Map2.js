@@ -24,8 +24,11 @@ const markerIcon2 = {
   url: "https://scontent.xx.fbcdn.net/v/t1.15752-9/362888790_1716994962088621_3952762805277764525_n.png?stp=cp0_dst-png&_nc_cat=110&cb=99be929b-59f725be&ccb=1-7&_nc_sid=aee45a&_nc_eui2=AeEu3rPZvP01NON_CrNkRhOt92fs6dN3AWn3Z-zp03cBadP5pgJ4s2LeVIo2L0yHmLh5stpFMFf8BCbRpNn_qiax&_nc_ohc=4J6AP7s7DEEAX90kfZD&_nc_ad=z-m&_nc_cid=0&_nc_ht=scontent.xx&oh=03_AdTCUFyUUvjrAmiX3Tt2H22LBvfMOzr9ntQAsph6JW3-7g&oe=64E340FD",
 };
 
-function Map2 ({ markersData1, markersData2}) {
-  
+const markerIcon3 = {
+  url: "https://scontent.xx.fbcdn.net/v/t1.15752-9/364215846_136342052843203_4648544736359358634_n.png?stp=cp0_dst-png&_nc_cat=110&cb=99be929b-59f725be&ccb=1-7&_nc_sid=aee45a&_nc_eui2=AeGEVA4ssIWSe1pVQWQWgqBpiSEiZU0N22yJISJlTQ3bbPajsvj_4aCF5mYqDV1Jwoe6z5sxsUAuVkIyZ9v_XyPD&_nc_ohc=rKzqPlMfOTwAX_FhPT_&_nc_ad=z-m&_nc_cid=0&_nc_ht=scontent.xx&oh=03_AdQ84FNEYPj3dnlwpCQbs2wrTkdKq64ETfKQjqLpKw5QLA&oe=64ECAB7F",
+};
+
+function Map2({ markersData1, markersData2, markersData3 }) {
   const { isLoaded } = useJsApiLoader({
     id: "google-map-script",
     googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
@@ -56,8 +59,12 @@ function Map2 ({ markersData1, markersData2}) {
         bounds.extend(markersData2);
         map.fitBounds(bounds);
       }
+      if (markersData3) {
+        bounds.extend(markersData3);
+        map.fitBounds(bounds);
+      }
     }
-  }, [map, markersData1, markersData2]);
+  }, [map, markersData1, markersData2, markersData3]);
 
   return isLoaded ? (
     <GoogleMap
@@ -87,6 +94,7 @@ function Map2 ({ markersData1, markersData2}) {
           }}
         />
       )}
+      {markersData3 && <Marker position={markersData3} icon={markerIcon3} />}
     </GoogleMap>
   ) : (
     <></>

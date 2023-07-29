@@ -78,6 +78,7 @@ form {
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    gap: 5px;
 }
 
 .btnShoot {
@@ -110,4 +111,22 @@ form {
     justify-content: center;
     align-items: center;
     gap: 5px;
+}
+
+.btnAnswer {
+    padding: 5px 10px;
+    background-color: #455a64;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    border-radius: 5px;
+    color: white;   
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+}
+
+.btnAnswer:hover {
+    background-color: #37474f;
 }

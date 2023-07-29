@@ -30,7 +30,6 @@ const markerIcon3 = {
 };
 
 function Map1({ markersData1, markersData2, markersData3, radius }) {
-
   const { isLoaded } = useJsApiLoader({
     id: "google-map-script",
     googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,

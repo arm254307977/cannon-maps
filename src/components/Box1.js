@@ -153,15 +153,14 @@ const conversToLatLng = (mgrs) => {
   return [lat, lng];
 };
 
-function Box1 (props) {
+function Box1(props) {
   const [mgrs1, setMgrs1] = useState("");
   const [markerPosition1, setMarkerPosition1] = useState(null);
   const [mgrs2, setMgrs2] = useState("");
   const [markerPosition2, setMarkerPosition2] = useState(null);
   const [markerPosition3, setMarkerPosition3] = useState(null);
-  const [discrepancy, setDiscrepancy] = useState(null);
+  const [positionFallTrue, setPositionFallTrue] = useState(null);
   const [meterR, setMeterR] = useState(500);
-
   const inputMeterR = (event) => {
     setMeterR(parseFloat(event.target.value));
   };
@@ -172,11 +171,10 @@ function Box1 (props) {
 
   const saveInput1 = async (event) => {
     event.preventDefault();
-
     const newData = {
       mgrs1: mgrs1,
-      radius: meterR
-    }
+      radius: meterR,
+    };
 
     if (mgrs1) {
       const M = conversToLatLng(mgrs1);
@@ -184,7 +182,6 @@ function Box1 (props) {
         lat: parseFloat(M[0]),
         lng: parseFloat(M[1]),
       });
-      console.log(mgrs1);
       props.addData(newData);
     } else {
       return Swal.fire({
@@ -195,7 +192,6 @@ function Box1 (props) {
         timer: 1500,
       });
     }
-
   };
 
   const inputMgrs2 = (event) => {
@@ -224,7 +220,6 @@ function Box1 (props) {
 
   const shoot = async (e) => {
     e.preventDefault();
-    console.log(meterR);
     if (
       markerPosition1 &&
       markerPosition2 &&
@@ -249,10 +244,15 @@ function Box1 (props) {
       let xp = x / Math.cos(y0);
       const dropPoint = { lat: y + y0, lng: xp + x0 };
       await setMarkerPosition3(dropPoint);
-      await setDiscrepancy(conversToMGRS(xp, y));
-      //   console.log(discrepancy);
-      //  await setDiscrepancy({ lat: xp, lng: y });
-      //   console.log("Drop Point:", dropPoint);
+      await setPositionFallTrue(conversToMGRS(dropPoint.lat, dropPoint.lng));
+      const newData = await {
+        mgrs1: mgrs1,
+        radius: meterR,
+        answerLat: markerPosition2.lat - y,
+        answerLng: markerPosition2.lng - xp,
+      };
+      props.addData(newData);
+      // await setDiscrepancy(conversToMGRS(xp, y));
     } else {
       return Swal.fire({
         position: "top",
@@ -267,12 +267,12 @@ function Box1 (props) {
   const clearMarker = (e) => {
     const newData = {
       mgrs1: null,
-      radius: 500
-    }
+      radius: 500,
+    };
     setMarkerPosition1(null);
     setMarkerPosition2(null);
     setMarkerPosition3(null);
-    setDiscrepancy(null);
+    setPositionFallTrue(null);
     setMgrs1("");
     setMgrs2("");
     props.addData(newData);
@@ -302,7 +302,9 @@ function Box1 (props) {
               value={mgrs1}
               onChange={inputMgrs1}
             />
-            <button onClick={saveInput1} className="btnDefault" >ยืนยัน</button>
+            <button onClick={saveInput1} className="btnDefault">
+              ยืนยัน
+            </button>
           </form>
           <form>
             <label>พิกัดปืนใหญ่ครั้งที่ 1</label>
@@ -312,10 +314,12 @@ function Box1 (props) {
               value={mgrs2}
               onChange={inputMgrs2}
             />
-            <button onClick={saveInput2} className="btnDefault">ยืนยัน</button>
+            <button onClick={saveInput2} className="btnDefault">
+              ยืนยัน
+            </button>
           </form>
           <div className="boxBtnShoot">
-            <button onClick={clearMarker} className="btnClear btnDefault" >
+            <button onClick={clearMarker} className="btnClear btnDefault">
               เคลียร์พิกัด
               <img
                 src="https://cdn-icons-png.flaticon.com/256/4720/4720266.png"
@@ -335,21 +339,23 @@ function Box1 (props) {
           <div className="resBox">
             <strong className="msgError">
               <img
-                src="https://cdn-icons-png.flaticon.com/256/9340/9340296.png"
-                alt="iconError"
+                src="https://cdn-icons-png.flaticon.com/256/5441/5441913.png"
+                alt="icon"
                 width={22}
               />
-              ความผิดพลาด
+              พิกัดตกจริง
               <img
-                src="https://cdn-icons-png.flaticon.com/256/9340/9340296.png"
-                alt="iconError"
+                src="https://cdn-icons-png.flaticon.com/256/5441/5441913.png"
+                alt="icon"
                 width={22}
               />
             </strong>
-            <div>{discrepancy ? <span>{discrepancy}</span> : "ㅤ"}</div>
+            <div>
+              {positionFallTrue ? <span>{positionFallTrue}</span> : "ㅤ"}
+            </div>
           </div>
         </div>
-        <div className="boxMap" style={{width: "100%"}}>
+        <div className="boxMap" style={{ width: "100%" }}>
           <Map1
             markersData1={markerPosition1}
             markersData2={markerPosition2}

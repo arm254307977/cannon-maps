@@ -85,30 +85,83 @@ const conversToLatLng = (mgrs) => {
   return [lat, lng];
 };
 
-function Box2({mgrs1, radius}) {
+const conversToMGRS = (lat, lng) => {
+  let Lat = parseFloat(lat);
+  let Long = parseFloat(lng);
+  if (Lat < -80) return "Too far South";
+  if (Lat > 84) return "Too far North";
+  let c = 1 + Math.floor((Long + 180) / 6);
+  let e = c * 6 - 183;
+  let k = (Lat * Math.PI) / 180;
+  let l = (Long * Math.PI) / 180;
+  let m = (e * Math.PI) / 180;
+  let n = Math.cos(k);
+  let o = 0.006739496819936062 * Math.pow(n, 2);
+  let p = 40680631590769 / (6356752.314 * Math.sqrt(1 + o));
+  let q = Math.tan(k);
+  let r = q * q;
+  let t = l - m;
+  let u = 1.0 - r + o;
+  let v = 5.0 - r + 9 * o + 4.0 * (o * o);
+  let w = 5.0 - 18.0 * r + r * r + 14.0 * o - 58.0 * r * o;
+  let x = 61.0 - 58.0 * r + r * r + 270.0 * o - 330.0 * r * o;
+  let y = 61.0 - 479.0 * r + 179.0 * (r * r) - r * r * r;
+  let z = 1385.0 - 3111.0 * r + 543.0 * (r * r) - r * r * r;
+  let aa =
+    p * n * t +
+    (p / 6.0) * Math.pow(n, 3) * u * Math.pow(t, 3) +
+    (p / 120.0) * Math.pow(n, 5) * w * Math.pow(t, 5) +
+    (p / 5040.0) * Math.pow(n, 7) * y * Math.pow(t, 7);
+  let ab =
+    6367449.14570093 *
+      (k -
+        0.00251882794504 * Math.sin(2 * k) +
+        0.00000264354112 * Math.sin(4 * k) -
+        0.00000000345262 * Math.sin(6 * k) +
+        0.000000000004892 * Math.sin(8 * k)) +
+    (q / 2.0) * p * Math.pow(n, 2) * Math.pow(t, 2) +
+    (q / 24.0) * p * Math.pow(n, 4) * v * Math.pow(t, 4) +
+    (q / 720.0) * p * Math.pow(n, 6) * x * Math.pow(t, 6) +
+    (q / 40320.0) * p * Math.pow(n, 8) * z * Math.pow(t, 8);
+  aa = aa * 0.9996 + 500000.0;
+  ab = ab * 0.9996;
+  if (ab < 0.0) ab += 10000000.0;
+  let ad = "CDEFGHJKLMNPQRSTUVWXX".charAt(Math.floor(Lat / 8 + 10));
+  let ae = Math.floor(aa / 100000);
+  let af = ["ABCDEFGH", "JKLMNPQR", "STUVWXYZ"][(c - 1) % 3].charAt(ae - 1);
+  let ag = Math.floor(ab / 100000) % 20;
+  let ah = ["ABCDEFGHJKLMNPQRSTUV", "FGHJKLMNPQRSTUVABCDE"][(c - 1) % 2].charAt(
+    ag
+  );
+  function pad(val) {
+    if (val < 10) {
+      val = "0000" + val;
+    } else if (val < 100) {
+      val = "000" + val;
+    } else if (val < 1000) {
+      val = "00" + val;
+    } else if (val < 10000) {
+      val = "0" + val;
+    }
+    return val;
+  }
+  aa = Math.floor(aa % 100000);
+  aa = pad(aa);
+  ab = Math.floor(ab % 100000);
+  ab = pad(ab);
+
+  return c + ad + " " + af + ah + " " + aa + " " + ab;
+};
+
+function Box2({mgrs1, radius, answerLat, answerLng}) {
   const [mgrs2, setMgrs2] = useState("");
   const [markerPosition1, setMarkerPosition1] = useState(null);
   const [markerPosition2, setMarkerPosition2] = useState(null);
+  const [markerPosition3, setMarkerPosition3] = useState(null);
   const [discrepancy, setDiscrepancy] = useState("ㅤ");
 
-  const inputMgrs2 = async (event) => {
-    setMgrs2(event.target.value);
-    if (mgrs1) {
-      const M = conversToLatLng(mgrs1);
-      await setMarkerPosition1({
-        lat: parseFloat(M[0]),
-        lng: parseFloat(M[1]),
-      });
-      console.log(markerPosition1);
-    } else {
-      return Swal.fire({
-        position: "top",
-        icon: "warning",
-        title: "กรุณากรอกข้อมูลพิกัดเริ่มต้นก่อน",
-        showConfirmButton: false,
-        timer: 1500,
-      });
-    }
+  const inputMgrs2 = async (e) => {
+    setMgrs2(e.target.value);
   };
 
   const setPosition1 = async (e) =>{
@@ -119,12 +172,11 @@ function Box2({mgrs1, radius}) {
         lat: parseFloat(M[0]),
         lng: parseFloat(M[1]),
       });
-      console.log(markerPosition1);
     } else {
       return Swal.fire({
         position: "top",
         icon: "warning",
-        title: "กรุณากรอกข้อมูลพิกัดเริ่มต้นก่อน",
+        title: "กรุณากรอกข้อมูลพิกัดเริ่มต้น\nจาก ครั้งที่ 1 ก่อน",
         showConfirmButton: false,
         timer: 1500,
       });
@@ -133,14 +185,21 @@ function Box2({mgrs1, radius}) {
 
   const shoot = async (e) => {
     e.preventDefault();
-    console.log(radius);
+    if (!markerPosition1) {
+      return Swal.fire({
+        position: "top",
+        icon: "warning",
+        title: "กรุณากดยืนยันพิกัดเริ่มต้น",
+        showConfirmButton: false,
+        timer: 1500,
+      });
+    }
     if (mgrs2) {
       const M = conversToLatLng(mgrs2);
       await setMarkerPosition2({
         lat: parseFloat(M[0]),
         lng: parseFloat(M[1]),
       });
-      setDiscrepancy("0");
     } else {
       return Swal.fire({
         position: "top",
@@ -153,10 +212,33 @@ function Box2({mgrs1, radius}) {
   };
 
   const clearMarker = (e) => {
+    e.preventDefault();
+    setMarkerPosition1(null);
     setMarkerPosition2(null);
+    setMarkerPosition3(null);
     setDiscrepancy("ㅤ");
     setMgrs2("");
   };
+
+  const answerPosition = async (e) => {
+    e.preventDefault();
+    if (!markerPosition1 || !markerPosition2) {
+      return Swal.fire({
+        position: "top",
+        icon: "warning",
+        title: "กรุณากรอกพิกัดและทำการยิงก่อน",
+        showConfirmButton: false,
+        timer: 1500,
+      });
+    } else {
+      await setMarkerPosition3({
+        lat: parseFloat(answerLat),
+        lng: parseFloat(answerLng),
+      });
+      const answerMgrs = await conversToMGRS(parseFloat(answerLat), parseFloat(answerLng))
+      await setDiscrepancy(answerMgrs)
+    }
+  }
 
   return (
     <>
@@ -168,11 +250,11 @@ function Box2({mgrs1, radius}) {
           <form>
             <label>พิกัดปืนใหญ่เริ่มต้น</label>
             <input type="text" readOnly value={mgrs1} placeholder="MGRS" />
-            <img src="https://cdn-icons-png.flaticon.com/256/10718/10718313.png" alt="icon" width={45} />
+            <button onClick={setPosition1} className="btnDefault">ยืนยัน</button>
           </form>
           <form>
             <label>พิกัดปืนใหญ่ครั้งที่ 2</label>
-            <input type="text" placeholder="MGRS" onChange={inputMgrs2} onClick={setPosition1} value={mgrs2}/>
+            <input type="text" placeholder="MGRS" onChange={inputMgrs2} value={mgrs2}/>
             <button className="btnShoot btnDefault" onClick={shoot}>
               ยิง
               <img
@@ -193,25 +275,22 @@ function Box2({mgrs1, radius}) {
             </button>
           </div>
           <div className="resBox">
-            <strong className="msgError">
+            <button className="btnAnswer" onClick={answerPosition}>
+              <span style={{marginTop: "1px"}}>เฉลยพิกัด</span>
               <img
-                src="https://cdn-icons-png.flaticon.com/256/9340/9340296.png"
+                src="https://cdn-icons-png.flaticon.com/256/8196/8196470.png"
                 alt="iconError"
                 width={22}
               />
-              ความผิดพลาด
-              <img
-                src="https://cdn-icons-png.flaticon.com/256/9340/9340296.png"
-                alt="iconError"
-                width={22}
-              />
-            </strong>
+            </button>
             <div>{discrepancy ? <span>{discrepancy}</span> : "ㅤ"}</div>
           </div>
         </div>
         <div className="boxMap" style={{width: "100%"}}>
-          <Map2 markersData1={markerPosition1}
+          <Map2 
+          markersData1={markerPosition1}
           markersData2={markerPosition2}
+          markersData3={markerPosition3}
           />
         </div>
       </div>
