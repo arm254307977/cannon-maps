@@ -65,7 +65,7 @@ form {
 .boxBtnShoot {
     display: flex;
     align-items: center;
-    justify-content: end;
+    justify-content: flex-end;
     gap: 20px;
     padding: 20px 0px;
     border-bottom: solid 1px rgb(233, 222, 222);
