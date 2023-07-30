@@ -200,17 +200,27 @@ function Box1(props) {
 
   const saveInput2 = async (event) => {
     event.preventDefault();
-    if (mgrs2) {
-      const M = conversToLatLng(mgrs2);
-      await setMarkerPosition2({
-        lat: parseFloat(M[0]),
-        lng: parseFloat(M[1]),
-      });
+    if (mgrs1) {
+      if (mgrs2) {
+        const M = conversToLatLng(mgrs2);
+        await setMarkerPosition2({
+          lat: parseFloat(M[0]),
+          lng: parseFloat(M[1]),
+        });
+      } else {
+        return Swal.fire({
+          position: "top",
+          icon: "warning",
+          title: "กรุณากรอกข้อมูลก่อนยืนยัน",
+          showConfirmButton: false,
+          timer: 1500,
+        });
+      }
     } else {
       return Swal.fire({
         position: "top",
         icon: "warning",
-        title: "กรุณากรอกข้อมูลก่อนยืนยัน",
+        title: "กรุณากรอกข้อมูลพิกัดเริ่มต้นก่อน",
         showConfirmButton: false,
         timer: 1500,
       });
