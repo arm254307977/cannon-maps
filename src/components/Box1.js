@@ -260,6 +260,7 @@ function Box1(props) {
         radius: meterR,
         answerLat: markerPosition2.lat - y,
         answerLng: markerPosition2.lng - xp,
+        markerPosition2: markerPosition2,
       };
       props.addData(newData);
       // await setDiscrepancy(conversToMGRS(xp, y));
@@ -372,6 +373,34 @@ function Box1(props) {
             markersData3={markerPosition3}
             radius={meterR}
           />
+        </div>
+        <div className="container pt-4 px-4" style={{ fontSize: "0.8rem" }}>
+          <div className="row">
+            <div className="col-sm-12 col-md-6 col-lg-6 mx-0 my-1 p-0 d-flex justify-content-start align-items-center">
+              <img
+                src="/images/iconM1Default.png"
+                alt="icon marker1"
+                width={"15%"}
+              />
+              <span>พิกัดปืนใหญ่เริ่มต้น</span>
+            </div>
+            <div className="col-sm-12 col-md-6 col-lg-6 mx-0 my-1 p-0 d-flex justify-content-start align-items-center">
+              <img
+                src="/images/iconM2Default.png"
+                alt="icon marker1"
+                width={"13%"}
+              />
+              <span>พิกัดปืนใหญ่ครั้งที่ 1</span>
+            </div>
+            <div className="col-sm-12 col-md-6 col-lg-6 mx-0 my-1 p-0 d-flex justify-content-start align-items-center">
+              <img
+                src="/images/iconM3Default.png"
+                alt="icon marker1"
+                width={"12%"}
+              />
+              <span>พิกัดตกจริง</span>
+            </div>
+          </div>
         </div>
       </div>
     </>

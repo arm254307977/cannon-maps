@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import {
+  Circle,
   GoogleMap,
   Marker,
   Polyline,
@@ -17,18 +18,22 @@ const center = {
 };
 
 const markerIcon1 = {
-  url: "https://scontent.xx.fbcdn.net/v/t1.15752-9/362137937_5656603701109327_4928987995166075586_n.png?stp=cp0_dst-png&_nc_cat=102&cb=99be929b-59f725be&ccb=1-7&_nc_sid=aee45a&_nc_eui2=AeGeXyuWa-kL8nInEiwyTgJxe4n_VKGFL-N7if9UoYUv4xC8gXWtw4r1xenBYT3dq_CCzGVqfFxfk_su4QDJOM5_&_nc_ohc=cfK6qzc1vjAAX8SQYQZ&_nc_ad=z-m&_nc_cid=0&_nc_ht=scontent.xx&oh=03_AdRfd0WYFeI2MKwK7b1z1UFIDWyck6QLGJoBawq6dc1UaQ&oe=64E36845",
+  url: require("../iconMarker/iconM1.png"),
 };
 
 const markerIcon2 = {
-  url: "https://scontent.xx.fbcdn.net/v/t1.15752-9/362888790_1716994962088621_3952762805277764525_n.png?stp=cp0_dst-png&_nc_cat=110&cb=99be929b-59f725be&ccb=1-7&_nc_sid=aee45a&_nc_eui2=AeEu3rPZvP01NON_CrNkRhOt92fs6dN3AWn3Z-zp03cBadP5pgJ4s2LeVIo2L0yHmLh5stpFMFf8BCbRpNn_qiax&_nc_ohc=4J6AP7s7DEEAX90kfZD&_nc_ad=z-m&_nc_cid=0&_nc_ht=scontent.xx&oh=03_AdTCUFyUUvjrAmiX3Tt2H22LBvfMOzr9ntQAsph6JW3-7g&oe=64E340FD",
+  url: require("../iconMarker/iconM4.png"),
 };
 
 const markerIcon3 = {
-  url: "https://scontent.xx.fbcdn.net/v/t1.15752-9/364215846_136342052843203_4648544736359358634_n.png?stp=cp0_dst-png&_nc_cat=110&cb=99be929b-59f725be&ccb=1-7&_nc_sid=aee45a&_nc_eui2=AeGEVA4ssIWSe1pVQWQWgqBpiSEiZU0N22yJISJlTQ3bbPajsvj_4aCF5mYqDV1Jwoe6z5sxsUAuVkIyZ9v_XyPD&_nc_ohc=rKzqPlMfOTwAX_FhPT_&_nc_ad=z-m&_nc_cid=0&_nc_ht=scontent.xx&oh=03_AdQ84FNEYPj3dnlwpCQbs2wrTkdKq64ETfKQjqLpKw5QLA&oe=64ECAB7F",
+  url: require("../iconMarker/iconM5.png"),
 };
 
-function Map2({ markersData1, markersData2, markersData3 }) {
+const markerIcon4 = {
+  url: require("../iconMarker/iconM2.png"),
+};
+
+function Map2({ markersData1, markersData2, markersData3, markersData4 }) {
   const { isLoaded } = useJsApiLoader({
     id: "google-map-script",
     googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
@@ -63,8 +68,12 @@ function Map2({ markersData1, markersData2, markersData3 }) {
         bounds.extend(markersData3);
         map.fitBounds(bounds);
       }
+      if (markersData4) {
+        bounds.extend(markersData4);
+        map.fitBounds(bounds);
+      }
     }
-  }, [map, markersData1, markersData2, markersData3]);
+  }, [map, markersData1, markersData2, markersData3, markersData4]);
 
   return isLoaded ? (
     <GoogleMap
@@ -95,6 +104,27 @@ function Map2({ markersData1, markersData2, markersData3 }) {
         />
       )}
       {markersData3 && <Marker position={markersData3} icon={markerIcon3} />}
+      {markersData3 !== null ? (
+        <Circle
+          center={markersData3}
+          options={{
+            strokeColor: "orange",
+            strokeOpacity: 0.8,
+            strokeWeight: 1,
+            fillColor: "orange",
+            fillOpacity: 0.1,
+            radius: 50,
+          }}
+        />
+      ) : (
+        <Circle
+          center={markersData2}
+          options={{
+            radius: 0,
+          }}
+        />
+      )}
+      {markersData4 && <Marker position={markersData4} icon={markerIcon4} />}
     </GoogleMap>
   ) : (
     <></>

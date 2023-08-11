@@ -153,18 +153,19 @@ const conversToMGRS = (lat, lng) => {
   return c + ad + " " + af + ah + " " + aa + " " + ab;
 };
 
-function Box2({mgrs1, radius, answerLat, answerLng}) {
+function Box2({ mgrs1, radius, answerLat, answerLng, markerPositionShot1 }) {
   const [mgrs2, setMgrs2] = useState("");
   const [markerPosition1, setMarkerPosition1] = useState(null);
   const [markerPosition2, setMarkerPosition2] = useState(null);
   const [markerPosition3, setMarkerPosition3] = useState(null);
+  const [markerPosition4, setMarkerPosition4] = useState(null);
   const [discrepancy, setDiscrepancy] = useState("ㅤ");
 
   const inputMgrs2 = async (e) => {
     setMgrs2(e.target.value);
   };
 
-  const setPosition1 = async (e) =>{
+  const setPosition1 = async (e) => {
     e.preventDefault();
     if (mgrs1) {
       const M = conversToLatLng(mgrs1);
@@ -172,6 +173,7 @@ function Box2({mgrs1, radius, answerLat, answerLng}) {
         lat: parseFloat(M[0]),
         lng: parseFloat(M[1]),
       });
+      await setMarkerPosition4(markerPositionShot1);
     } else {
       return Swal.fire({
         position: "top",
@@ -181,7 +183,7 @@ function Box2({mgrs1, radius, answerLat, answerLng}) {
         timer: 1500,
       });
     }
-  }
+  };
 
   const shoot = async (e) => {
     e.preventDefault();
@@ -216,6 +218,7 @@ function Box2({mgrs1, radius, answerLat, answerLng}) {
     setMarkerPosition1(null);
     setMarkerPosition2(null);
     setMarkerPosition3(null);
+    setMarkerPosition4(null);
     setDiscrepancy("ㅤ");
     setMgrs2("");
   };
@@ -235,10 +238,13 @@ function Box2({mgrs1, radius, answerLat, answerLng}) {
         lat: parseFloat(answerLat),
         lng: parseFloat(answerLng),
       });
-      const answerMgrs = await conversToMGRS(parseFloat(answerLat), parseFloat(answerLng))
-      await setDiscrepancy(answerMgrs)
+      const answerMgrs = await conversToMGRS(
+        parseFloat(answerLat),
+        parseFloat(answerLng)
+      );
+      await setDiscrepancy(answerMgrs);
     }
-  }
+  };
 
   return (
     <>
@@ -250,11 +256,18 @@ function Box2({mgrs1, radius, answerLat, answerLng}) {
           <form>
             <label>พิกัดปืนใหญ่เริ่มต้น</label>
             <input type="text" readOnly value={mgrs1} placeholder="MGRS" />
-            <button onClick={setPosition1} className="btnDefault">ยืนยัน</button>
+            <button onClick={setPosition1} className="btnDefault">
+              ยืนยัน
+            </button>
           </form>
           <form>
             <label>พิกัดปืนใหญ่ครั้งที่ 2</label>
-            <input type="text" placeholder="MGRS" onChange={inputMgrs2} value={mgrs2}/>
+            <input
+              type="text"
+              placeholder="MGRS"
+              onChange={inputMgrs2}
+              value={mgrs2}
+            />
             <button className="btnShoot btnDefault" onClick={shoot}>
               ยิง
               <img
@@ -264,7 +277,7 @@ function Box2({mgrs1, radius, answerLat, answerLng}) {
               />
             </button>
           </form>
-          <div className="boxBtnShoot" style={{paddingBottom: "66px"}}>
+          <div className="boxBtnShoot" style={{ paddingBottom: "66px" }}>
             <button className="btnClear btnDefault" onClick={clearMarker}>
               เคลียร์พิกัด
               <img
@@ -276,7 +289,7 @@ function Box2({mgrs1, radius, answerLat, answerLng}) {
           </div>
           <div className="resBox">
             <button className="btnAnswer" onClick={answerPosition}>
-              <span style={{marginTop: "1px"}}>เฉลยพิกัด</span>
+              <span style={{ marginTop: "1px" }}>เฉลยพิกัด</span>
               <img
                 src="https://cdn-icons-png.flaticon.com/256/8196/8196470.png"
                 alt="iconError"
@@ -286,12 +299,49 @@ function Box2({mgrs1, radius, answerLat, answerLng}) {
             <div>{discrepancy ? <span>{discrepancy}</span> : "ㅤ"}</div>
           </div>
         </div>
-        <div className="boxMap" style={{width: "100%"}}>
-          <Map2 
-          markersData1={markerPosition1}
-          markersData2={markerPosition2}
-          markersData3={markerPosition3}
+        <div className="boxMap" style={{ width: "100%" }}>
+          <Map2
+            markersData1={markerPosition1}
+            markersData2={markerPosition2}
+            markersData3={markerPosition3}
+            markersData4={markerPosition4}
           />
+        </div>
+        <div className="container pt-4 px-4" style={{ fontSize: "0.8rem" }}>
+          <div className="row">
+            <div className="col-sm-12 col-md-6 col-lg-6 mx-0 my-1 p-0 d-flex justify-content-start align-items-center">
+              <img
+                src="/images/iconM1Default.png"
+                alt="icon marker1"
+                width={"15%"}
+              />
+              <span>พิกัดปืนใหญ่เริ่มต้น</span>
+            </div>
+            <div className="col-sm-12 col-md-6 col-lg-6 mx-0 my-1 p-0 d-flex justify-content-start align-items-center">
+              <img
+                src="/images/iconM2Default.png"
+                alt="icon marker2"
+                width={"13%"}
+              />
+              <span>พิกัดปืนใหญ่ครั้งที่ 1</span>
+            </div>
+            <div className="col-sm-12 col-md-6 col-lg-6 mx-0 my-1 p-0 d-flex justify-content-start align-items-center">
+              <img
+                src="/images/iconM4Default.png"
+                alt="icon marker4"
+                width={"12.5%"}
+              />
+              <span>พิกัดปืนใหญ่ครั้งที่ 2</span>
+            </div>
+            <div className="col-sm-6 col-md-6 col-lg-6 mx-0 my-1 p-0 d-flex justify-content-start align-items-center">
+              <img
+                src="/images/iconM5Default.png"
+                alt="icon marker5"
+                width={"15%"}
+              />
+              <span>พิกัดเฉลย</span>
+            </div>
+          </div>
         </div>
       </div>
     </>

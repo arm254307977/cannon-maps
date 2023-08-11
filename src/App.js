@@ -8,12 +8,15 @@ function App() {
   const [radiusBox1, setRadiusBox1] = useState(0);
   const [answerLat, setAnswerLat] = useState(0)
   const [answerLng, setAnswerLng] = useState(0)
+  const [position2, setPosition2] = useState({})
 
   const onAddData = (newData) =>{
     setMgrsBox1(newData.mgrs1);
     setRadiusBox1(newData.redius);
     setAnswerLat(newData.answerLat);
-    setAnswerLng(newData.answerLng)
+    setAnswerLng(newData.answerLng);
+    setPosition2(newData.markerPosition2)
+    
   }
 
   return (
@@ -23,7 +26,7 @@ function App() {
           <Box1 addData = {onAddData} />
         </div>
         <div className='col-12 col-md-12 col-lg-5 card py-3 shadow-sm'>
-          <Box2 mgrs1 = {mgrsBox1} radius = {radiusBox1} answerLat ={answerLat} answerLng ={answerLng}/>
+          <Box2 mgrs1 = {mgrsBox1} radius = {radiusBox1} answerLat ={answerLat} answerLng ={answerLng} markerPositionShot1={position2}/>
         </div>
       </div>
     </div>
