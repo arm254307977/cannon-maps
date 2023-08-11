@@ -374,7 +374,10 @@ function Box1(props) {
             radius={meterR}
           />
         </div>
-        <div className="container pt-4 px-4" style={{ fontSize: "0.8rem" }}>
+        <div
+          className="container pt-4 px-4"
+          style={{ fontSize: "0.8rem", fontWeight: "bold", color: "#616161" }}
+        >
           <div className="row">
             <div className="col-sm-12 col-md-6 col-lg-6 mx-0 my-1 p-0 d-flex justify-content-start align-items-center">
               <img
