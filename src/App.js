@@ -2,6 +2,11 @@ import { useState } from 'react';
 import './App.css';
 import Box1 from './components/Box1'
 import Box2 from './components/Box2'
+import lottie from 'lottie-web';
+import { defineElement } from 'lord-icon-element';
+
+// define "lord-icon" custom element with default properties
+defineElement(lottie.loadAnimation);
 
 function App() {
   const [mgrsBox1, setMgrsBox1] = useState("");

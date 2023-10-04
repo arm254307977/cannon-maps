@@ -270,31 +270,37 @@ function Box2({ mgrs1, radius, answerLat, answerLng, markerPositionShot1 }) {
             />
             <button className="btnShoot btnDefault" onClick={shoot}>
               ยิง
-              <img
-                src="https://cdn-icons-png.flaticon.com/256/856/856987.png"
-                alt="iconShoot"
-                width={22}
-              />
+              <lord-icon
+                src="https://cdn.lordicon.com/pjibjvxa.json"
+                trigger="loop"
+                delay="500"
+                colors="primary:#f24c00,secondary:#4bb3fd,tertiary:#3a3347"
+                style={{ width: "25px", height: "25px" }}
+              ></lord-icon>
             </button>
           </form>
           <div className="boxBtnShoot" style={{ paddingBottom: "66px" }}>
             <button className="btnClear btnDefault" onClick={clearMarker}>
               เคลียร์พิกัด
-              <img
-                src="https://cdn-icons-png.flaticon.com/256/4720/4720266.png"
-                alt="iconClear"
-                width={22}
-              />
+              <lord-icon
+                src="https://cdn.lordicon.com/exkbusmy.json"
+                trigger="loop"
+                delay="500"
+                colors="outline:#242424,primary:#646e78,secondary:#4bb3fd,tertiary:#ffffff"
+                style={{ width: "25px", height: "25px" }}
+              ></lord-icon>
             </button>
           </div>
           <div className="resBox">
             <button className="btnAnswer" onClick={answerPosition}>
               <span style={{ marginTop: "1px" }}>เฉลยพิกัด</span>
-              <img
-                src="https://cdn-icons-png.flaticon.com/256/8196/8196470.png"
-                alt="iconError"
-                width={22}
-              />
+              <lord-icon
+                src="https://cdn.lordicon.com/osbjlbsb.json"
+                trigger="loop"
+                delay="500"
+                colors="outline:#ffffff,secondary:#d1fad7,secondary2:#4bb3fd,quaternary:#ebe6ef"
+                style={{ width: "25px", height: "25px" }}
+              ></lord-icon>
             </button>
             <div>{discrepancy ? <span>{discrepancy}</span> : "ㅤ"}</div>
           </div>

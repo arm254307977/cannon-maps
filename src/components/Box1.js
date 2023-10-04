@@ -332,34 +332,44 @@ function Box1(props) {
           <div className="boxBtnShoot">
             <button onClick={clearMarker} className="btnClear btnDefault">
               เคลียร์พิกัด
-              <img
-                src="https://cdn-icons-png.flaticon.com/256/4720/4720266.png"
-                alt="iconClear"
-                width={22}
-              />
+              <lord-icon
+                src="https://cdn.lordicon.com/exkbusmy.json"
+                trigger="loop"
+                delay="500"
+                colors="outline:#242424,primary:#646e78,secondary:#4bb3fd,tertiary:#ffffff"
+                style={{ width: "25px", height: "25px" }}
+              ></lord-icon>
             </button>
             <button onClick={shoot} className="btnShoot btnDefault">
               ยิง
-              <img
-                src="https://cdn-icons-png.flaticon.com/256/856/856987.png"
-                alt="iconShoot"
-                width={22}
-              />
+              <lord-icon
+                src="https://cdn.lordicon.com/pjibjvxa.json"
+                trigger="loop"
+                delay="500"
+                colors="outline:#ffffff,primary:#f24c00,secondary:#4bb3fd,tertiary:#ebe6ef"
+                style={{ width: "25px", height: "25px" }}
+              ></lord-icon>
             </button>
           </div>
           <div className="resBox">
             <strong className="msgError">
-              <img
-                src="https://cdn-icons-png.flaticon.com/256/5441/5441913.png"
-                alt="icon"
-                width={22}
-              />
+              <lord-icon
+                src="https://cdn.lordicon.com/fihkmkwt.json"
+                trigger="loop"
+                delay="500"
+                colors="primary:#848484,secondary:#4bb3fd"
+                state="hover-jump-spin"
+                style={{ width: "35px", height: "35px" }}
+              ></lord-icon>
               พิกัดตกจริง
-              <img
-                src="https://cdn-icons-png.flaticon.com/256/5441/5441913.png"
-                alt="icon"
-                width={22}
-              />
+              <lord-icon
+                src="https://cdn.lordicon.com/fihkmkwt.json"
+                trigger="loop"
+                delay="500"
+                colors="primary:#848484,secondary:#4bb3fd"
+                state="hover-jump-spin"
+                style={{ width: "35px", height: "35px" }}
+              ></lord-icon>
             </strong>
             <div>
               {positionFallTrue ? <span>{positionFallTrue}</span> : "ㅤ"}
